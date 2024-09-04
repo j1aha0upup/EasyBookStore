@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>图书管理</title>
+	<link type="text/css" rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+	<div id="header">
+		<img class="logo_img" alt="" src="/static/img/logo.gif">
+		<span class="wel_word">图书管理系统</span>
+		<div>
+			<a href="/getbooks">图书管理</a>
+			<a href="/getorders">订单管理</a>
+			<a href="/index">返回商城</a>
+		</div>
+	</div>
+
+	<div id="main">
+		<table>
+			<tr>
+				<td>名称</td>
+				<td>价格</td>
+				<td>作者</td>
+				<td>销量</td>
+				<td>库存</td>
+				<td colspan="2">操作</td>
+			</tr>
+
+			{{range .Books}}
+
+			<tr>
+				<td>{{.Title}}</td>
+				<td>{{.Price}}</td>
+				<td>{{.Author}}</td>
+				<td>{{.Sales}}</td>
+				<td>{{.Stock}}</td>
+				<td><a href="/updateBook?id={{.ID}}">修改</a></td>
+				<td><a id="{{.Title}}" class="deletebook" href="/deleteBook?id={{.ID}}">删除</a></td>
+			</tr>
+			{{end}}
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><a href="/updateBook">添加图书</a></td>
+			</tr>
+		</table>
+	</div>
+	<div id="page_nav">
+		<a href="/getbooks">首页</a>
+		{{if .Page.PreviousPage}}
+		<a href="/getbooks?currentPage={{.Page.PreviousPage}}">上一页</a>
+		{{end}}
+		【{{.Page.CurrentPage}}】
+		{{if .Page.NextPage}}
+		<a href="/getbooks?currentPage={{.Page.NextPage}}">下一页</a>
+		{{end}}
+
+		<a href="/getbooks?currentPage={{.Page.TotalPages}}">末页</a>
+
+		<form action="/getbooks" style="display: inline;">
+			共{{.Page.TotalPages}}页，{{.Page.TotalRecords}}条记录 到第
+			<input value="{{.Page.CurrentPage}}" name="currentPage" style="width: 40px;text-align: center;" />页
+			<input type="submit" value="确定" />
+		</form>
+
+	</div>
+
+	<div id="bottom">
+		<span>
+			 书城.Copyright &copy;2015
+		</span>
+	</div>
+</body>
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function () {
+		$(".deletebook").click(function () {
+			var title = $(this).attr("id")
+
+			return confirm("delete <" + title + "> ?")
+		})
+	})
+</script>
+
+
+</html>

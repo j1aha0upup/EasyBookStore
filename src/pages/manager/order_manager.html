@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>订单管理</title>
+	<link type="text/css" rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+	<div id="header">
+		<img class="logo_img" alt="" src="/static/img/logo.gif">
+		<span class="wel_word">图书管理系统</span>
+		<div>
+			<a href="/pages/manager/book_manager.html">图书管理</a>
+			<a href="/">返回商城</a>
+		</div>
+	</div>
+
+	<div id="main">
+		<table>
+			<tr>
+				<td>订单号</td>
+				<td>总数量</td>
+				<td>总金额</td>
+				<td>订单状态</td>
+				<td>订单时间</td>
+				<td>订单详情</td>
+				<td>发货</td>
+			</tr>
+			{{range .Orders}}
+			<tr>
+				<td>{{.Id}}</td>
+				<td>{{.TotalQuantity}}</td>
+				<td>{{.TotalAmount}}</td>
+				<td>{{.Flag}}</td>
+				<td>{{.Order_date}}</td>
+				<td><a href="/get_order_detail?order_id={{.Id}}">查看详情</a></td>
+				{{if eq .Order_flag 0}}
+				<td><a href="/sendoutgoods?order_id={{.Id}}">发货</a></td>
+				{{else}}
+				<td>{{.Flag}}</td>
+				{{end}}
+			</tr>
+			{{end}}
+		</table>
+	</div>
+	<div id="page_nav">
+		<a href="/getorders">首页</a>
+		{{if .Page.PreviousPage}}
+		<a href="/getorders?currentPage={{.Page.PreviousPage}}">上一页</a>
+		{{end}}
+		【{{.Page.CurrentPage}}】
+		{{if .Page.NextPage}}
+		<a href="/getorders?currentPage={{.Page.NextPage}}">下一页</a>
+		{{end}}
+
+		<a href="/getorders?currentPage={{.Page.TotalPages}}">末页</a>
+
+		<form action="/getorders" style="display: inline;">
+			共{{.Page.TotalPages}}页，{{.Page.TotalRecords}}条记录 到第
+			<input value="{{.Page.CurrentPage}}" name="currentPage" style="width: 40px;text-align: center;" />页
+			<input type="submit" value="确定" />
+		</form>
+
+	</div>
+
+	<div id="bottom">
+		<span>
+			书城.Copyright &copy;2015
+		</span>
+	</div>
+</body>
+<!-- <script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function () {
+		$(".deletebook").click(function () {
+			var title = $(this).attr("id")
+
+			return confirm("delete <" + title + "> ?")
+		})
+	})
+</script> -->
+
+
+</html>

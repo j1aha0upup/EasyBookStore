@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>书城首页</title>
+	<link type="text/css" rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+	{{if .IsLogin}}
+	<div id="header">
+		<img class="logo_img" alt="" src="/static/img/logo.gif">
+		<div>
+			<span>欢迎<span class="um_span">{{.User_name}}</span>光临 书城</span>
+			<a href="/cart">购物车</a>
+			<a href="/myorders">我的订单</a>&nbsp;&nbsp;
+			<a href="/logout">注销</a>
+			{{if .Admin}}
+			<a href="/getbooks">图书管理</a>
+			<a href="/getorders">订单管理</a>
+			{{end}}
+		</div>
+	</div>
+	{{else}}
+	<div id="header">
+		<img class="logo_img" alt="" src="/static/img/logo.gif">
+		<span class="wel_word">简易书城</span>
+		<div>
+			<a href="/login">登录</a> |
+			<a href="/regist">注册</a> &nbsp;&nbsp;
+		</div>
+	</div>
+	{{end}}
+
+	<div id="main">
+		<div id="book">
+			<div class="book_cond">
+				<form action="index" method="get">
+					价格：<input type="text" name="min" value="{{.Page.Min}}"> 元 - <input type="text" name="max"
+						value="{{.Page.Max}}"> 元
+					<input type="submit" value="查询">
+				</form>
+
+			</div>
+			<div style="text-align: center">
+
+				<div>
+					<span style="color: red" id="bookMsg"></span>
+				</div>
+			</div>
+
+			{{range .Books}}
+			<div class="b_list">
+				<div class="img_div">
+					<img class="book_img" alt="" src="{{.ImagePath}}" />
+				</div>
+				<div class="book_info">
+					<div class="book_name">
+						<span class="sp1">书名:</span>
+						<span class="sp2">{{.Title}}</span>
+					</div>
+					<div class="book_author">
+						<span class="sp1">作者:</span>
+						<span class="sp2">{{.Author}}</span>
+					</div>
+					<div class="book_price">
+						<span class="sp1">价格:</span>
+						<span class="sp2">￥{{.Price}}</span>
+					</div>
+					<div class="book_sales">
+						<span class="sp1">销量:</span>
+						<span class="sp2">{{.Sales}}</span>
+					</div>
+					<div class="book_amount">
+						<span class="sp1">库存:</span>
+						<span class="sp2">{{.Stock}}</span>
+					</div>
+					<div class="book_add">
+						{{if .Stock}}
+						<button id="{{.ID}}" class="addBookToCart">加入购物车</button>
+						{{else}}
+						<span style="color: red" id="bookMsg">暂时没货</span>
+						{{end}}
+					</div>
+				</div>
+			</div>
+			{{end}}
+
+		</div>
+
+		<div id="page_nav">
+
+			<a href="/index?min={{.Page.Min}}&&max={{.Page.Max}}">首页</a>
+
+			{{if .Page.PreviousPage}}
+			<a href="/index?currentPage={{.Page.PreviousPage}}&&min={{.Page.Min}}&&max={{.Page.Max}}">上一页</a>
+			{{end}}
+
+			【{{.Page.CurrentPage}}】
+			{{if .Page.NextPage}}
+			<a href="/index?currentPage={{.Page.NextPage}}&&min={{.Page.Min}}&&max={{.Page.Max}}">下一页</a>
+			{{end}}
+
+			<a href="/index?currentPage={{.Page.TotalPages}}&&min={{.Page.Min}}&&max={{.Page.Max}}">末页</a>
+
+			<form action="/index" style="display: inline;">
+				共{{.Page.TotalPages}}页，{{.Page.TotalRecords}}条记录 到第
+				<input value="{{.Page.CurrentPage}}" name="currentPage" style="width: 40px;text-align: center;" />页
+				<input hidden name="min" value="{{.Page.Min}}" />
+				<input hidden name="max" value="{{.Page.Max}}" />
+				<input type="submit" value="确定" />
+			</form>
+		</div>
+
+	</div>
+
+	<div id="bottom">
+		<span>
+			书城.Copyright &copy;2015
+		</span>
+	</div>
+</body>
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function () {
+
+
+		$(".addBookToCart").click(function () {
+			let bookId = $(this).attr("id")
+			let url = "/addBooktoCart"
+			let param = { "bookId": bookId }
+			$.post(url, param, function (res) {
+				$("#bookMsg").text(res)
+
+			})
+		});
+	});
+</script>
+
+</html>
